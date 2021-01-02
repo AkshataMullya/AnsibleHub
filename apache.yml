@@ -1,0 +1,13 @@
+---
+- hosts: webservers
+  tasks:
+    - name: Install apache2 package
+      apt: name=apache2 update_cache=yes state=latest
+    - name: Enable Mod Rewrite
+      apache2_module: name=rewrite state=present
+    - name: Restart Service
+      service: name=apache2 state=restarted
+    - name: Add PHP PPA 7 repository
+      apt_repository: 'repo="ppa:ondrej/php" update_cache=yes'
+    - name: Install php7.2 package
+      apt: name=php7.2 update_cache=yes state=latest 

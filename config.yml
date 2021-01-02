@@ -1,0 +1,44 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: Install apache2 package
+      apt: name=apache2 update_cache=yes state=latest
+    - name: Enable Mod Rewrite
+      apache2_module: name=rewrite state=present
+    - name: Restart Service
+      service: name=apache2 state=restarted
+    - name: Add PHP PPA 7 repository
+      apt_repository: 'repo="ppa:ondrej/php" update_cache=yes'
+    - name: Install php7.2 package
+      apt: name=php7.2 update_cache=yes state=latest
+    - name: install packages
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - php7.2-mysql
+        - libapache2-mod-php
+    - name: Ensure apache is at the latest version
+      ansible.builtin.yum:
+       name: apache2
+       state: latest
+    - name: Set up Apache virtualhost
+      template:
+       src: files/student.conf.j2
+       dest: '/etc/apache2/sites-available/{{ http_conf }}'
+      notify: reload apache2
+    - name: Disable default Apache site
+      shell: /usr/sbin/a2dissite 000-default.conf
+      when: disable_default
+      notify: reload apache2
+    - name: Enable new site
+      shell: '/usr/sbin/a2ensite {{ http_conf }}'
+      notify: reload apache2
+    - name: Enable PHP module
+      shell: /usr/sbin/a2enmod php7.2
+      notify: reload apache2
+  handlers:
+    - name: reload apache2
+      service: name=apache2 state=reloaded
+

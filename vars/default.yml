@@ -1,0 +1,5 @@
+---
+http_host: 172.31.59.104
+http_conf: registration.conf
+http_port: '80'
+disable_default: true
