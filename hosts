@@ -18,8 +18,8 @@
 # Ex 2: A collection of hosts belonging to the 'webservers' group
 
  [webservers]
- 34.227.205.37
- 100.26.164.45
+ 18.205.234.151
+
 
 
 # If you have multiple hosts following a pattern you can specify
