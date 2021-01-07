@@ -18,7 +18,7 @@
 # Ex 2: A collection of hosts belonging to the 'webservers' group
 
  [webservers]
- 54.236.5.121
+ 54.147.25.12
 
 
 
